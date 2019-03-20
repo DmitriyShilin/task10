@@ -35,33 +35,43 @@ public class GetInformationFromUrl {
 	
 	public String getArticleId() {
 		String[] strList = getUrl().split("/");
-		return strList[strList.length - 1];
+		return strList[strList.length - 1].substring(0, strList[strList.length - 1].length()-5);
 	}
 	
 	public String getName() {
-		Element nameElement = doc.getElementById("productTitle");		
-		return nameElement.text();
+		Elements nameElement = doc.getElementsByAttributeValue("data-qaid", "product_name");		
+		return nameElement.first().text();
 	}
 	
 	public String getPrice() {
-		Element priceElement = doc.getElementById("priceblock_ourprice");
-		return priceElement.text();
+		Elements priceElement = doc.getElementsByAttributeValue("itemprop", "price");
+		Elements priceCurrencyElement = doc.getElementsByAttributeValue("itemprop", "priceCurrency");
+		return priceElement.first().text() + priceCurrencyElement.get(1).text();		
 	}
 	
-	public LinkedList<String> getDescription() {
-		LinkedList<String> description = new LinkedList<>();
-		Element descriptionElement = doc.getElementById("featurebullets_feature_div");
-		Elements descriptionElements = descriptionElement.getElementsByClass("a-list-item");
-		descriptionElements.remove(0);
-		for(Element e: descriptionElements) {
-			description.add(e.text());
+	public LinkedList<String> getSpecifications() {
+		LinkedList<String> specifications = new LinkedList<>();		
+		Elements descriptionElements = doc.getElementsByClass("x-attributes__row js-attributes");
+		for(Element e: descriptionElements) {			
+			Elements leftElement = e.getElementsByClass("x-attributes__value");
+			Elements rightElement = e.getElementsByClass("x-attributes__right");
+			specifications.add(leftElement.first().text()+" : "+ rightElement.first().text());
 		}
-		return description;
+		return specifications;
 	}
 	
-	public String getAvailability() {
-		Element availabilityElement = doc.getElementById("availability");
-		return availabilityElement.text();
+	public String getDescription() {
+		Elements descriptionElement = doc.getElementsByAttributeValue("itemprop", "description");		
+		return descriptionElement.get(1).text();
 	}
 
+	public String getAvailability() {
+		Elements availabilityElement = doc.getElementsByAttributeValue("data-qaid", "product_presence");
+		return availabilityElement.text();
+	}
+	
+	public String getImgUrl() {
+		Elements imgElement = doc.select("img");		
+		return imgElement.get(1).absUrl("src");
+	}
 }

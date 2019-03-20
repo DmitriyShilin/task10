@@ -18,22 +18,26 @@ public class WebPage {
 	private String name;
 	private String price;	
 	private String availability;
+	private String description;
+	private String imgUrl;
 	
 	@XmlElementWrapper(name = "descriptions")
 	@XmlElement(name = "description")
-	private LinkedList<String> description;
+	private LinkedList<String> specifications;
 	
 	public WebPage() {
-		description = new LinkedList<>();
+		specifications = new LinkedList<>();
 	}
 	
-	public WebPage(String url, String articleId, String name, String price, LinkedList<String> description, String availability) {
+	public WebPage(String url, String articleId, String name, String price, LinkedList<String> specifications, String availability, String description, String imgUrl) {
 		this.url = url;
 		this.articleId = articleId;
 		this.name = name;
 		this.price = price;
-		this.description = description;
+		this.specifications = specifications;
 		this.availability = availability;
+		this.description = description;
+		this.imgUrl = imgUrl;
 	}
 	
 	public void setUrl(String url) {
@@ -68,12 +72,12 @@ public class WebPage {
 		return price;
 	}
 	
-	public void setDescription(LinkedList<String> description) {
-		this.description = description;
+	public void setSpecifications(LinkedList<String> specifications) {
+		this.specifications = specifications;
 	}
 	
-	public LinkedList<String> getDescription() {
-		return description;
+	public LinkedList<String> getSpecifications() {
+		return specifications;
 	}
 	
 	public void setAvailability(String availability) {
@@ -83,5 +87,20 @@ public class WebPage {
 	public String getAvailability() {
 		return availability;
 	}
-
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+	
+	public String getImgUrl() {
+		return imgUrl;
+	}
 }
