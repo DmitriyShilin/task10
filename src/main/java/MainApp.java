@@ -1,7 +1,3 @@
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import bot.BotPromUa;
 import model.BotUser;
 import model.WebPage;
@@ -34,8 +30,5 @@ public class MainApp {
 		BotUser user = new BotUser("John2996666", "jhon3234889@fastmail.com", "QwErTy123456");
 		BotPromUa botAmazon = new BotPromUa(user);
 		botAmazon.getRegistration();
-				
-		
 	}
-	
 }
