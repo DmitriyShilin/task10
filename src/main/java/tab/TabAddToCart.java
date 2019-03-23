@@ -1,5 +1,7 @@
 package tab;
 
+import org.openqa.selenium.NoSuchElementException;
+
 import bot.BotPromUa;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -67,7 +69,11 @@ public class TabAddToCart {
 					message.setText("");
 					BotUser user = new BotUser(null, email, password);
 					BotPromUa promUa = new BotPromUa(user);
-					promUa.addToCart(articleId);
+					try{
+						promUa.addToCart(articleId);
+					} catch (NoSuchElementException e) {
+						message.setText("Incorrec articleId");
+					}
 				}
 				else message.setText("Enter articleId, password and email.");
 			}

@@ -78,7 +78,7 @@ public class BotPromUa {
 		driver.quit();
 	}
 	
-	public void addToCart(String articleId) {
+	public void addToCart(String articleId) throws NoSuchElementException{
 		
 		init();
 		
@@ -100,7 +100,8 @@ public class BotPromUa {
 			WebElement elementAddToCart = driver.findElement(By.linkText("Купить"));
 			elementAddToCart.click();
 		} catch (NoSuchElementException ex) {
-			logger.log(Level.SEVERE, null, ex);
+			driver.quit();
+			throw ex;			
 		}
 		
 		try {
