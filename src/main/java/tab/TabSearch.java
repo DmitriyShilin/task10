@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import jdbc.WebPageJDBCDAO;
 import model.WebPage;
 import model.WebPages;
 import service.GetInformationFromUrl;
@@ -87,8 +88,6 @@ public class TabSearch {
 		str.append("\n" + info.getName() + "\n");
 		str.append("\nUrl:");
 		str.append("\n" + info.getUrl()+ "\n");
-		str.append("\nArticleId:");
-		str.append("\n" + info.getArticleId()+ "\n");
 		str.append("\nPrice:");
 		str.append("\n" + info.getPrice()+ "\n");
 		str.append("\nAvailability:");
@@ -104,13 +103,14 @@ public class TabSearch {
 	}
 	
 	private static void setWebPage(GetInformationFromUrl info) {
-		pages.getWebPages().add(new WebPage(info.getUrl(), 
-											info.getArticleId(), 
-											info.getName(), 
-											info.getPrice(), 
-											info.getSpecifications(), 
-											info.getAvailability(), 
-											info.getDescription(), 
-											info.getImgUrl()));
+		WebPage page = new WebPage(info.getUrl(),
+								   info.getName(), 
+								   info.getPrice(), 
+								   info.getSpecifications(), 
+								   info.getAvailability(), 
+								   info.getDescription(), 
+								   info.getImgUrl());
+		pages.getWebPages().add(page);
+		new WebPageJDBCDAO().insert(page);
 	}
 }

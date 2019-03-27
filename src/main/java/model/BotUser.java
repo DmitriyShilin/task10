@@ -2,6 +2,7 @@ package model;
 
 public class BotUser {
 	
+	private Integer id;
 	private String name;
 	private String email;
 	private String password;
@@ -14,6 +15,21 @@ public class BotUser {
 		this.name = name;
 		this.email = email;
 		this.password = password;
+	}
+	
+	public BotUser(Integer id, String name, String email, String password) {
+		this.id = id;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		 this.id = id;
 	}
 	
 	public String getName() {

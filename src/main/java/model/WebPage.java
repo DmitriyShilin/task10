@@ -13,8 +13,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class WebPage {
 	
+	private Integer id;
 	private String url;
-	private String articleId;
 	private String name;
 	private String price;	
 	private String availability;
@@ -29,9 +29,8 @@ public class WebPage {
 		specifications = new LinkedList<>();
 	}
 	
-	public WebPage(String url, String articleId, String name, String price, LinkedList<String> specifications, String availability, String description, String imgUrl) {
+	public WebPage(String url,String name, String price, LinkedList<String> specifications, String availability, String description, String imgUrl) {
 		this.url = url;
-		this.articleId = articleId;
 		this.name = name;
 		this.price = price;
 		this.specifications = specifications;
@@ -40,20 +39,31 @@ public class WebPage {
 		this.imgUrl = imgUrl;
 	}
 	
+	public WebPage(Integer id, String url,String name, String price, LinkedList<String> specifications, String availability, String description, String imgUrl) {
+		this.id = id;
+		this.url = url;
+		this.name = name;
+		this.price = price;
+		this.specifications = specifications;
+		this.availability = availability;
+		this.description = description;
+		this.imgUrl = imgUrl;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	
+	public void setId(Integer id) {
+		 this.id = id;
+	}
+	
 	public void setUrl(String url) {
 		this.url = url;
 	}
 	
 	public String getUrl() {
 		return url;
-	}
-	
-	public void setArticleId(String articleId) {
-		this.articleId = articleId;
-	}
-	
-	public String getArticleId() {
-		return articleId;
 	}
 	
 	public void setName(String name) {

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -55,7 +56,7 @@ public class BotPromUa {
 		else throw new NotSupportOSException();
 	}
 	
-	public void getRegistration() {
+	public void getRegistration() throws TimeoutException{
 		
 		init();		
 		
@@ -71,6 +72,17 @@ public class BotPromUa {
 		elementButton.click();
 		
 		try {
+			new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>() {
+				public Boolean apply(WebDriver d) {
+					return d.getCurrentUrl().equals("https://my.prom.ua/cabinet/user/settings");
+				}
+			});	
+		} catch (TimeoutException ex) {
+			driver.quit();
+			throw ex;			
+		}
+		
+		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException ex) {
 			logger.log(Level.SEVERE, null, ex);
@@ -78,7 +90,7 @@ public class BotPromUa {
 		driver.quit();
 	}
 	
-	public void addToCart(String articleId) throws NoSuchElementException{
+	public void addToCart(String url) throws NoSuchElementException, TimeoutException{
 		
 		init();
 		
@@ -89,13 +101,19 @@ public class BotPromUa {
 		elementPassword.sendKeys(user.getPassword());
 		WebElement elementButton = driver.findElement(By.className("button__text--ujaS_"));
 		elementButton.click();
-		new WebDriverWait(driver, 20).until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver d) {
-				return d.getCurrentUrl().equals("https://my.prom.ua/cabinet/user");
-			}
-		});	
+		try {
+			new WebDriverWait(driver, 10).until(new ExpectedCondition<Boolean>() {
+				public Boolean apply(WebDriver d) {
+					return d.getCurrentUrl().equals("https://my.prom.ua/cabinet/user");
+				}
+			});	
+		} catch (TimeoutException ex) {
+			driver.quit();
+			throw ex;			
+		}
 		
-		driver.get("https://prom.ua/"+ articleId + ".html");
+		
+		driver.get(url);
 		try {
 			WebElement elementAddToCart = driver.findElement(By.linkText("Купить"));
 			elementAddToCart.click();

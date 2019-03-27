@@ -1,6 +1,7 @@
 package tab;
 
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 
 import bot.BotPromUa;
 import javafx.event.ActionEvent;
@@ -24,18 +25,18 @@ public class TabAddToCart {
 		VBox vBoxAdd = new VBox();
 		vBoxAdd.setAlignment(Pos.TOP_CENTER);
 		
-		Text textArticleId = new Text("ArticleId");		
-		TextField textFieldArticleId = new TextField();
-		textFieldArticleId.setPromptText("ArticleId");
-		vBoxAdd.getChildren().addAll(textArticleId, textFieldArticleId);
+		Text textUrl = new Text("Url");	
+		VBox.setMargin(textUrl, new Insets(5.0, 0.0, 0.0, 0.0));
+		TextField textFieldUrl = new TextField();
+		textFieldUrl.setPromptText("Url");
+		vBoxAdd.getChildren().addAll(textUrl, textFieldUrl);
 		
 		Text textPasswordSignIn = new Text("Password");		
 		TextField textFieldPasswordSignIn = new TextField();
 		textFieldPasswordSignIn.setPromptText("Password");
 		vBoxAdd.getChildren().addAll(textPasswordSignIn, textFieldPasswordSignIn);
 		
-		Text textEmailSignIn = new Text("Email");
-		VBox.setMargin(textEmailSignIn, new Insets(5.0, 0.0, 0.0, 0.0));
+		Text textEmailSignIn = new Text("Email");		
 		TextField textFieldEmailSignIn = new TextField();
 		textFieldEmailSignIn.setPromptText("Email");
 		vBoxAdd.getChildren().addAll(textEmailSignIn, textFieldEmailSignIn);
@@ -53,29 +54,33 @@ public class TabAddToCart {
 		vBoxAdd.setSpacing(5.0);
 		tabAdd.setContent(vBoxAdd);
 		
-		startAction(buttonAdd, textFieldEmailSignIn, textFieldPasswordSignIn, textFieldArticleId, message);
+		startAction(buttonAdd, textFieldEmailSignIn, textFieldPasswordSignIn, textFieldUrl, message);
 		
 		return tabAdd;
 	}
 	
-	private static void startAction(Button buttonAdd, TextField textFieldEmailSignIn, TextField textFieldPasswordSignIn, TextField textFieldArticleId, Text message) {
+	private static void startAction(Button buttonAdd, TextField textFieldEmailSignIn, TextField textFieldPasswordSignIn, TextField textFieldUrl, Text message) {
 		buttonAdd.setOnAction(new EventHandler<ActionEvent>() {	
 			@Override
 			public void handle(ActionEvent event) {
-				String articleId = textFieldArticleId.getCharacters().toString();
+				String url = textFieldUrl.getCharacters().toString();
 				String password = textFieldPasswordSignIn.getCharacters().toString();
 				String email = textFieldEmailSignIn.getCharacters().toString();
-				if(!articleId.isEmpty() && !password.isEmpty() && !email.isEmpty() && EmailValidator.validate(email)) {
+				if(!url.isEmpty() && !password.isEmpty() && !email.isEmpty() && EmailValidator.validate(email)) {
 					message.setText("");
 					BotUser user = new BotUser(null, email, password);
 					BotPromUa promUa = new BotPromUa(user);
 					try{
-						promUa.addToCart(articleId);
-					} catch (NoSuchElementException e) {
-						message.setText("Incorrec articleId");
+						promUa.addToCart(url);
+					} 
+					catch (NoSuchElementException e) {
+						message.setText("Incorrec url");
+					}
+					catch  (TimeoutException e) {
+						message.setText("Incorrec email/password");
 					}
 				}
-				else message.setText("Enter articleId, password and email.");
+				else message.setText("Enter url, password and email.");
 			}
 		});
 		

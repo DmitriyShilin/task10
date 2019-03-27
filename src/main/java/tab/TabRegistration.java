@@ -1,5 +1,7 @@
 package tab;
 
+import org.openqa.selenium.TimeoutException;
+
 import bot.BotPromUa;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,6 +13,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import jdbc.BotUserJDBCDAO;
 import model.BotUser;
 import service.EmailValidator;
 
@@ -67,7 +70,12 @@ public class TabRegistration {
 					message.setText("");
 					BotUser user = new BotUser(name, email, password);
 					BotPromUa botProm = new BotPromUa(user);
-					botProm.getRegistration();
+					try{
+						botProm.getRegistration();
+					} catch  (TimeoutException e) {
+						message.setText("This choice of email address has already been assigned");
+					}
+					new BotUserJDBCDAO().insert(user);
 				}
 				else message.setText("Enter name, password and email.");
 			}

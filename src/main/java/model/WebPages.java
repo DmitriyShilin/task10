@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class WebPages {
 	
 	@XmlElement(name = "webpage")
-	public LinkedList<WebPage> webpages;
+	private LinkedList<WebPage> webpages;
 	
 	public WebPages() {
 		webpages = new LinkedList<>();

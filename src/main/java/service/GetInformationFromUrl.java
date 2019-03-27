@@ -32,12 +32,7 @@ public class GetInformationFromUrl {
 	public String getUrl() {
 		return doc.location();
 	}
-	
-	public String getArticleId() {
-		String[] strList = getUrl().split("/");
-		return strList[strList.length - 1].substring(0, strList[strList.length - 1].length()-5);
-	}
-	
+		
 	public String getName() {
 		Elements nameElement = doc.getElementsByAttributeValue("data-qaid", "product_name");		
 		return nameElement.first().text();

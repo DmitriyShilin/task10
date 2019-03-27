@@ -6,7 +6,23 @@ import org.junit.Test;
 
 public class BotUserTest {
 	
-	private BotUser botUser = new BotUser("name", "email", "password");
+	private BotUser botUser = new BotUser(25 , "name", "email", "password");
+	
+	@Test
+	public void testGetNId() {
+		Integer expResult = 25;
+		Integer result = botUser.getId();
+		assertEquals(expResult, result);
+	}
+	
+	@Test
+	public void testSetId() {
+		BotUser bot = new BotUser();
+		Integer expResult = 25;
+		bot.setId(expResult);
+		Integer result = bot.getId();
+		assertEquals(expResult, result);
+	}
 	
 	@Test
 	public void testGetName() {

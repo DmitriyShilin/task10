@@ -16,7 +16,23 @@ public class WebPageTest {
 	public static void init() {
 		specifications = new LinkedList<>();
 		specifications.add("specifications");
-		webPage = new WebPage("url", "articleId", "name", "price", specifications, "availability", "description", "imgUrl");
+		webPage = new WebPage(25, "url", "name", "price", specifications, "availability", "description", "imgUrl");
+	}
+	
+	@Test
+	public void testGetId() {
+		Integer expResult = 25;
+		Integer result = webPage.getId();
+		assertEquals(expResult, result);
+	}
+	
+	@Test
+	public void testSetId() {
+		WebPage page = new WebPage();
+		Integer expResult = 25;
+		page.setId(expResult);
+		Integer result = page.getId();
+		assertEquals(expResult, result);
 	}
 
 	@Test
@@ -34,24 +50,7 @@ public class WebPageTest {
 		String result = page.getUrl();
 		assertEquals(expResult, result);
 	}
-	
-	@Test
-	public void testGetArticleId() {
-		String expResult = "articleId";
-		String result = webPage.getArticleId();
-		assertEquals(expResult, result);
-	}
-	
-	@Test
-	public void testSetArticleId() {
-		WebPage page = new WebPage();
-		String expResult = "articleIdExpect";
-		page.setArticleId(expResult);
-		String result = page.getArticleId();
-		assertEquals(expResult, result);
-	}
-	
-	
+		
 	@Test
 	public void testGetPrice() {
 		String expResult = "price";
