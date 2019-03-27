@@ -14,8 +14,15 @@ import model.WebPage;
 public class WebPageJDBCDAOTest {
 	
 	private static LinkedList<String> specifications;
+	
 	private static WebPage pageExp;
-	private static Integer id;
+	private static Integer idExp;
+	
+	private static WebPage pageUpd;
+	private static Integer idUpd;
+	
+	private static WebPage pageDel;
+	private static Integer idDel;
 
 	@BeforeClass
 	public static void setUpBeforeClass(){
@@ -23,15 +30,21 @@ public class WebPageJDBCDAOTest {
 		specifications.add("specificationOne");
 		specifications.add("specificationsTwo");
 		pageExp = new WebPage("urlExp", "nameExp", "priceExp", specifications, "availabilityExp", "descriptionExp", "imgUrlExp");
+		pageUpd = new WebPage("urlUpd", "nameUpd", "priceUpd", specifications, "availabilityUpd", "descriptionUpd", "imgUrlUpd");
+		pageDel = new WebPage("urlDel", "nameDel", "priceDel", specifications, "availabilityDel", "descriptionDel", "imgUrlDel");
 		WebPageJDBCDAO jdbcdao = new WebPageJDBCDAO();
 		jdbcdao.insert(pageExp);
-		id = jdbcdao.findByName("nameExp").getId();
+		jdbcdao.insert(pageUpd);
+		jdbcdao.insert(pageDel);
+		idExp = jdbcdao.findByName("nameExp").getId();
+		idUpd = jdbcdao.findByName("nameUpd").getId();
+		idDel = jdbcdao.findByName("nameExp").getId();
 	}
 
 	@Test
 	public void testFind() {
-		WebPage pageResult = new WebPageJDBCDAO().find(id);
-		assertEquals(pageResult.getId(), id);
+		WebPage pageResult = new WebPageJDBCDAO().find(idExp);
+		assertEquals(pageResult.getId(), idExp);
 		assertEquals(pageResult.getUrl(), pageExp.getUrl());
 		assertEquals(pageResult.getName(), pageExp.getName());
 		assertEquals(pageResult.getPrice(), pageExp.getPrice());
@@ -44,7 +57,7 @@ public class WebPageJDBCDAOTest {
 	@Test
 	public void testFindByName() {
 		WebPage pageResult = new WebPageJDBCDAO().findByName("nameExp");
-		assertEquals(pageResult.getId(), id);
+		assertEquals(pageResult.getId(), idExp);
 		assertEquals(pageResult.getUrl(), pageExp.getUrl());
 		assertEquals(pageResult.getName(), pageExp.getName());
 		assertEquals(pageResult.getPrice(), pageExp.getPrice());
@@ -59,8 +72,8 @@ public class WebPageJDBCDAOTest {
 		List<WebPage> pageResultList = new WebPageJDBCDAO().findAll();
 		assertTrue(!pageResultList.isEmpty());
 		for(WebPage pageResult: pageResultList) {
-			if(pageResult.getId()==id) {
-				assertEquals(pageResult.getId(), id);
+			if(pageResult.getId()==idExp) {
+				assertEquals(pageResult.getId(), idExp);
 				assertEquals(pageResult.getUrl(), pageExp.getUrl());
 				assertEquals(pageResult.getName(), pageExp.getName());
 				assertEquals(pageResult.getPrice(), pageExp.getPrice());
@@ -77,8 +90,8 @@ public class WebPageJDBCDAOTest {
 		List<WebPage> pageResultList = new WebPageJDBCDAO().findAvailability("availabilityExp");
 		assertTrue(!pageResultList.isEmpty());
 		for(WebPage pageResult: pageResultList) {
-			if(pageResult.getId()==id) {
-				assertEquals(pageResult.getId(), id);
+			if(pageResult.getId()==idExp) {
+				assertEquals(pageResult.getId(), idExp);
 				assertEquals(pageResult.getUrl(), pageExp.getUrl());
 				assertEquals(pageResult.getName(), pageExp.getName());
 				assertEquals(pageResult.getPrice(), pageExp.getPrice());
@@ -96,10 +109,10 @@ public class WebPageJDBCDAOTest {
 		LinkedList<String> specificationsUpdate = new LinkedList<>();		
 		specificationsUpdate.add("specificationOneUpdate");
 		specificationsUpdate.add("specificationsTwoUpdate");
-		WebPage pageExpUpdate = new WebPage(id, "urlUpdate", "nameUpdate", "priceUpdate", specificationsUpdate, "availabilityUpdate", "descriptionUpdate", "imgUrlUpdate");
+		WebPage pageExpUpdate = new WebPage(idUpd, "urlUpdate", "nameUpdate", "priceUpdate", specificationsUpdate, "availabilityUpdate", "descriptionUpdate", "imgUrlUpdate");
 		jdbcdao.update(pageExpUpdate);
-		WebPage pageResult = jdbcdao.find(id);
-		assertEquals(pageResult.getId(), id);
+		WebPage pageResult = jdbcdao.find(idUpd);
+		assertEquals(pageResult.getId(), idUpd);
 		assertEquals(pageResult.getUrl(), pageExpUpdate.getUrl());
 		assertEquals(pageResult.getName(), pageExpUpdate.getName());
 		assertEquals(pageResult.getPrice(), pageExpUpdate.getPrice());
@@ -109,11 +122,11 @@ public class WebPageJDBCDAOTest {
 		assertTrue(pageExpUpdate.getSpecifications().containsAll(pageResult.getSpecifications()));
 	}
 	
-	/*@Test
+	@Test
 	public void testDelete() {
 		WebPageJDBCDAO jdbcdao = new WebPageJDBCDAO();
-		jdbcdao.delete(id);
-		WebPage pageResult = jdbcdao.find(id);
+		jdbcdao.delete(idDel);
+		WebPage pageResult = jdbcdao.find(idDel);
 		assertTrue(pageResult.getId()==null);
 		assertTrue(pageResult.getName()==null);
 		assertTrue(pageResult.getUrl()==null);
@@ -122,10 +135,12 @@ public class WebPageJDBCDAOTest {
 		assertTrue(pageResult.getDescription()==null);
 		assertTrue(pageResult.getImgUrl()==null);
 		assertTrue(pageResult.getSpecifications().isEmpty());
-	}*/
+	}
 	
 	@AfterClass
 	public static void  tearDownAfterClass() {
-		new WebPageJDBCDAO().delete(id);
+		WebPageJDBCDAO jdbcdao = new WebPageJDBCDAO();
+		jdbcdao.delete(idExp);
+		jdbcdao.delete(idUpd);
 	}
 }

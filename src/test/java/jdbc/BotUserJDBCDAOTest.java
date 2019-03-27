@@ -12,31 +12,47 @@ import model.BotUser;
 
 public class BotUserJDBCDAOTest {
 	
-	private static BotUser user = new BotUser("nameExp", "emailExp", "passwordExp");
-	private static Integer id;
+	private static BotUser userExp = new BotUser("nameExp", "emailExp", "passwordExp");
+	private static Integer idExp;
+	
+	private static BotUser userUpd = new BotUser("nameUpd", "emailUpd", "passwordUpd");
+	private static Integer idUpd;
+	
+	private static BotUser userDel = new BotUser("nameDel", "emailDel", "passwordDel");
+	private static Integer idDel;
 
 	@BeforeClass
 	public static void setUpBeforeClass(){
 		BotUserJDBCDAO jdbcdao = new BotUserJDBCDAO();
-		jdbcdao.insert(user);	
-		id = jdbcdao.findByEmail("emailExp").getId();
+		jdbcdao.insert(userExp);
+		jdbcdao.insert(userUpd);
+		jdbcdao.insert(userDel);
+		idExp = jdbcdao.findByEmail("emailExp").getId();
+		idUpd = jdbcdao.findByEmail("emailUpd").getId();
+		idDel = jdbcdao.findByEmail("emailDel").getId();
 	}	
 
 	@Test
 	public void testFind() {
-		BotUser userResult = new BotUserJDBCDAO().find(id);
-		assertEquals(userResult.getName(), user.getName());
-		assertEquals(userResult.getEmail(), user.getEmail());
-		assertEquals(userResult.getPassword(), user.getPassword());
+		BotUser userResult = new BotUserJDBCDAO().find(idExp);
+		assertEquals(userResult.getId(), idExp);
+		assertEquals(userResult.getName(), userExp.getName());
+		assertEquals(userResult.getEmail(), userExp.getEmail());
+		assertEquals(userResult.getPassword(), userExp.getPassword());
 	}
 	
 	@Test
 	public void testFindByName() {
 		List<BotUser> userResultList = new BotUserJDBCDAO().findByName("nameExp");
 		assertTrue(!userResultList.isEmpty());
-		assertEquals(userResultList.get(0).getName(), user.getName());
-		assertEquals(userResultList.get(0).getEmail(), user.getEmail());
-		assertEquals(userResultList.get(0).getPassword(), user.getPassword());
+		for(BotUser userResult: userResultList) {
+			if(userResult.getId().equals(idExp)) {
+				assertEquals(userResult.getId(), idExp);
+				assertEquals(userResult.getName(), userExp.getName());
+				assertEquals(userResult.getEmail(), userExp.getEmail());
+				assertEquals(userResult.getPassword(), userExp.getPassword());
+			}
+		}
 	}
 	
 	@Test
@@ -44,46 +60,51 @@ public class BotUserJDBCDAOTest {
 		List<BotUser> userResultList = new BotUserJDBCDAO().findAll();
 		assertTrue(!userResultList.isEmpty());
 		for(BotUser userResult: userResultList) {
-			if(userResult.getId().equals(id)) {
-				assertEquals(userResult.getName(), user.getName());
-				assertEquals(userResult.getEmail(), user.getEmail());
-				assertEquals(userResult.getPassword(), user.getPassword());
+			if(userResult.getId().equals(idExp)) {
+				assertEquals(userResult.getId(), idExp);
+				assertEquals(userResult.getName(), userExp.getName());
+				assertEquals(userResult.getEmail(), userExp.getEmail());
+				assertEquals(userResult.getPassword(), userExp.getPassword());
 			}
 		}		
 	}
 	
 	@Test
-	public void testFindByEmail() {		
+	public void testFindByEmail() {	
 		BotUser userResult = new BotUserJDBCDAO().findByEmail("emailExp");
-		assertEquals(userResult.getName(), user.getName());
-		assertEquals(userResult.getEmail(), user.getEmail());
-		assertEquals(userResult.getPassword(), user.getPassword());
+		assertEquals(userResult.getId(), idExp);
+		assertEquals(userResult.getName(), userExp.getName());
+		assertEquals(userResult.getEmail(), userExp.getEmail());
+		assertEquals(userResult.getPassword(), userExp.getPassword());
 	}
 	
 	@Test
 	public void testUpdate() {
-		BotUser userUpdate = new BotUser(id, "nameUpdate", "emailUpdate", "passwordUpdate");
+		BotUser userUpdate = new BotUser(idUpd, "nameUpdate", "emailUpdate", "passwordUpdate");
 		BotUserJDBCDAO jdbcdao = new BotUserJDBCDAO();
 		jdbcdao.update(userUpdate);
-		BotUser userResult = jdbcdao.find(id);
+		BotUser userResult = jdbcdao.find(idUpd);
+		assertEquals(userResult.getId(), userUpdate.getId());
 		assertEquals(userResult.getName(), userUpdate.getName());
 		assertEquals(userResult.getEmail(), userUpdate.getEmail());
 		assertEquals(userResult.getPassword(), userUpdate.getPassword());
 	}
 	
-	/*@Test
+	@Test
 	public void testDelete() {
 		BotUserJDBCDAO jdbcdao = new BotUserJDBCDAO();
-		jdbcdao.delete(id);
-		BotUser userResult = jdbcdao.find(id);
+		jdbcdao.delete(idDel);
+		BotUser userResult = jdbcdao.find(idDel);
 		assertTrue(userResult.getId()==null);
 		assertTrue(userResult.getName()==null);
 		assertTrue(userResult.getEmail()==null);
 		assertTrue(userResult.getPassword()==null);
-	}*/
+	}
 	
 	@AfterClass
 	public static void  tearDownAfterClass() {
-		new BotUserJDBCDAO().delete(id);
+		BotUserJDBCDAO jdbcdao = new BotUserJDBCDAO();
+		jdbcdao.delete(idExp);
+		jdbcdao.delete(idUpd);
 	}
 }
