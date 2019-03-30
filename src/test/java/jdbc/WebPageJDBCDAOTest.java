@@ -38,7 +38,7 @@ public class WebPageJDBCDAOTest {
 		jdbcdao.insert(pageDel);
 		idExp = jdbcdao.findByName("nameExp").getId();
 		idUpd = jdbcdao.findByName("nameUpd").getId();
-		idDel = jdbcdao.findByName("nameExp").getId();
+		idDel = jdbcdao.findByName("nameDel").getId();
 	}
 
 	@Test

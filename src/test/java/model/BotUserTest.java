@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class BotUserTest {
 	
-	private BotUser botUser = new BotUser(25 , "name", "email", "password");
+	private BotUser botUser = new BotUser( 25, "name", "email", "password");
 	
 	@Test
 	public void testGetNId() {

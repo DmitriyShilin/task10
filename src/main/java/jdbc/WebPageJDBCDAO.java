@@ -13,14 +13,15 @@ import java.util.logging.Logger;
 
 import model.WebPage;
 
-public class WebPageJDBCDAO implements WebPageDAO{
+public class WebPageJDBCDAO extends BaseDAO<WebPage>{
 	
 	private Logger logger = Logger.getLogger(WebPageJDBCDAO.class.getName());
 
 	@Override
 	public void insert(WebPage page) {
+		String query = "INSERT INTO webpage(url, name, price, availability, description, img_url, specifications) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try(Connection conn = ConnectionFactory.getConnection(); 
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO webpage(URL, NAME, PRICE, AVAILABILITY, DESCRIPTION, IMG_URL, SPECIFICATIONS) VALUES (?, ?, ?, ?, ?, ?, ?)")){
+			PreparedStatement ps = conn.prepareStatement(query)){
 			ps.setString(1, page.getUrl());
 			ps.setString(2, page.getName());
 			ps.setString(3, page.getPrice());
@@ -36,9 +37,10 @@ public class WebPageJDBCDAO implements WebPageDAO{
 
 	@Override
 	public void delete(Integer id) {
+		String query = "DELETE FROM webpage WHERE id=" + id;
 		try(Connection conn = ConnectionFactory.getConnection(); 
 			Statement stmt = conn.createStatement()){
-			stmt.executeUpdate("DELETE FROM WebPage WHERE ID=" + id);			
+			stmt.executeUpdate(query);			
 		}catch (SQLException e) {
 			logger.log(Level.SEVERE, null, e);
 		}		
@@ -46,8 +48,9 @@ public class WebPageJDBCDAO implements WebPageDAO{
 
 	@Override
 	public void update(WebPage page) {
+		String query = "UPDATE webpage SET url=?, name=?, price=?, availability=?, description=?, img_url=?, specifications=? WHERE id=?";
 		try(Connection conn = ConnectionFactory.getConnection(); 
-			PreparedStatement ps = conn.prepareStatement("UPDATE webpage SET URL=?, NAME=?, PRICE=?, AVAILABILITY=?, DESCRIPTION=?, IMG_URL=?, SPECIFICATIONS=? WHERE ID=?")){
+			PreparedStatement ps = conn.prepareStatement(query)){
 			ps.setString(1, page.getUrl());
 			ps.setString(2, page.getName());
 			ps.setString(3, page.getPrice());
@@ -64,41 +67,42 @@ public class WebPageJDBCDAO implements WebPageDAO{
 
 	@Override
 	public WebPage find(Integer id) { 
-		WebPage page = new WebPage();		
+		WebPage page = new WebPage();
+		String query = "SELECT * FROM webpage WHERE id=" + id;
 		try(Connection conn = ConnectionFactory.getConnection(); 
 			Statement stmt = conn.createStatement(); 
-		    ResultSet rs = stmt.executeQuery("SELECT * FROM webpage WHERE ID=" + id);) {
+		    ResultSet rs = stmt.executeQuery(query)) {
 			if(rs.next()) {				
-				page.setId(rs.getInt("ID"));				
-				page.setUrl(rs.getString("URL"));
-				page.setName(rs.getString("NAME"));
-				page.setPrice(rs.getString("PRICE"));
-				page.setAvailability(rs.getString("AVAILABILITY"));
-				page.setDescription(rs.getString("DESCRIPTION"));
-				page.setImgUrl(rs.getString("IMG_URL"));
-				page.setSpecifications(textToSpecifications(rs.getString("SPECIFICATIONS")));
+				page.setId(rs.getInt("id"));				
+				page.setUrl(rs.getString("url"));
+				page.setName(rs.getString("name"));
+				page.setPrice(rs.getString("price"));
+				page.setAvailability(rs.getString("availability"));
+				page.setDescription(rs.getString("description"));
+				page.setImgUrl(rs.getString("img_url"));
+				page.setSpecifications(textToSpecifications(rs.getString("specifications")));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, null, e);
 		}		
 		return page;
 	}
-
-	@Override
+	
 	public WebPage findByName(String name) { 
-		WebPage page = new WebPage();		
+		WebPage page = new WebPage();
+		String query = "SELECT * FROM webpage WHERE name='" + name + "'";
 		try(Connection conn = ConnectionFactory.getConnection(); 
 			Statement stmt = conn.createStatement(); 
-		    ResultSet rs = stmt.executeQuery("SELECT * FROM webpage WHERE NAME='" + name + "'");) {
+		    ResultSet rs = stmt.executeQuery(query)) {
 			if(rs.next()) {
-				page.setId(rs.getInt("ID"));
-				page.setUrl(rs.getString("URL"));
-				page.setName(rs.getString("NAME"));
-				page.setPrice(rs.getString("PRICE"));
-				page.setAvailability(rs.getString("AVAILABILITY"));
-				page.setDescription(rs.getString("DESCRIPTION"));
-				page.setImgUrl(rs.getString("IMG_URL"));
-				page.setSpecifications(textToSpecifications(rs.getString("SPECIFICATIONS")));
+				page.setId(rs.getInt("id"));
+				page.setUrl(rs.getString("url"));
+				page.setName(rs.getString("name"));
+				page.setPrice(rs.getString("price"));
+				page.setAvailability(rs.getString("availability"));
+				page.setDescription(rs.getString("description"));
+				page.setImgUrl(rs.getString("img_url"));
+				page.setSpecifications(textToSpecifications(rs.getString("specifications")));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, null, e);
@@ -108,20 +112,21 @@ public class WebPageJDBCDAO implements WebPageDAO{
 
 	@Override
 	public List<WebPage> findAll() {
-		List<WebPage> pageList = new LinkedList<>();		
+		List<WebPage> pageList = new LinkedList<>();	
+		String query = "SELECT * FROM webpage";
 		try(Connection conn = ConnectionFactory.getConnection(); 
 			Statement stmt = conn.createStatement(); 
-		    ResultSet rs = stmt.executeQuery("SELECT * FROM webpage");) {			
+		    ResultSet rs = stmt.executeQuery(query);) {			
 			while(rs.next()) {
 				WebPage page = new WebPage();
-				page.setId(rs.getInt("ID"));
-				page.setUrl(rs.getString("URL"));
-				page.setName(rs.getString("NAME"));
-				page.setPrice(rs.getString("PRICE"));
-				page.setAvailability(rs.getString("AVAILABILITY"));
-				page.setDescription(rs.getString("DESCRIPTION"));
-				page.setImgUrl(rs.getString("IMG_URL"));
-				page.setSpecifications(textToSpecifications(rs.getString("SPECIFICATIONS")));
+				page.setId(rs.getInt("id"));
+				page.setUrl(rs.getString("url"));
+				page.setName(rs.getString("name"));
+				page.setPrice(rs.getString("price"));
+				page.setAvailability(rs.getString("availability"));
+				page.setDescription(rs.getString("description"));
+				page.setImgUrl(rs.getString("img_url"));
+				page.setSpecifications(textToSpecifications(rs.getString("specifications")));
 				pageList.add(page);
 			}
 		} catch (SQLException e) {
@@ -129,23 +134,23 @@ public class WebPageJDBCDAO implements WebPageDAO{
 		}
 		return pageList;
 	}
-
-	@Override
+	
 	public List<WebPage> findAvailability(String availability) {
-		List<WebPage> pageList = new LinkedList<>();		
+		List<WebPage> pageList = new LinkedList<>();	
+		String query = "SELECT * FROM webpage WHERE availability='" + availability + "'";
 		try(Connection conn = ConnectionFactory.getConnection(); 
 			Statement stmt = conn.createStatement(); 
-		    ResultSet rs = stmt.executeQuery("SELECT * FROM webpage WHERE AVAILABILITY='" + availability + "'");) {			
+		    ResultSet rs = stmt.executeQuery(query);) {
 			while(rs.next()) {
 				WebPage page = new WebPage();
-				page.setId(rs.getInt("ID"));
-				page.setUrl(rs.getString("URL"));
-				page.setName(rs.getString("NAME"));
-				page.setPrice(rs.getString("PRICE"));
-				page.setAvailability(rs.getString("AVAILABILITY"));
-				page.setDescription(rs.getString("DESCRIPTION"));
-				page.setImgUrl(rs.getString("IMG_URL"));
-				page.setSpecifications(textToSpecifications(rs.getString("SPECIFICATIONS")));
+				page.setId(rs.getInt("id"));
+				page.setUrl(rs.getString("url"));
+				page.setName(rs.getString("name"));
+				page.setPrice(rs.getString("price"));
+				page.setAvailability(rs.getString("availability"));
+				page.setDescription(rs.getString("description"));
+				page.setImgUrl(rs.getString("img_url"));
+				page.setSpecifications(textToSpecifications(rs.getString("specifications")));
 				pageList.add(page);
 			}
 		} catch (SQLException e) {

@@ -1,5 +1,6 @@
 import tab.TabAddToCart;
 import tab.TabRegistration;
+import tab.TabReport;
 import tab.TabSearch;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -16,8 +17,8 @@ public class MainApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		
-		TabPane rootTab = new TabPane();		
-		rootTab.getTabs().addAll(TabSearch.createTab(), TabRegistration.createTab(), TabAddToCart.createTab());
+		TabPane rootTab = new TabPane();	 
+		rootTab.getTabs().addAll(TabSearch.createTab(), TabRegistration.createTab(), TabAddToCart.createTab(), TabReport.createTab());
 		Scene scene = new Scene(rootTab, 1500, 800);
 		
 		primaryStage.setTitle("Web Resource");

@@ -1,3 +1,12 @@
+CREATE DATABASE "WebResource"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Russian_Russia.1251'
+    LC_CTYPE = 'Russian_Russia.1251'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
 CREATE TABLE public.botuser
 (
     id bigint NOT NULL DEFAULT nextval('botuser_id_seq'::regclass),
@@ -34,4 +43,23 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE public.webpage
+    OWNER to postgres;
+    
+
+    
+CREATE TABLE public.cart
+(
+    id bigint NOT NULL DEFAULT nextval('cart_id_seq'::regclass),
+    url character varying COLLATE pg_catalog."default" NOT NULL,
+    email character varying COLLATE pg_catalog."default" NOT NULL,
+    password character varying COLLATE pg_catalog."default" NOT NULL,
+    "timestamp" timestamp without time zone NOT NULL,
+    CONSTRAINT cart_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.cart
     OWNER to postgres;

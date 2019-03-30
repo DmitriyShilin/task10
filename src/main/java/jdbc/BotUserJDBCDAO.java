@@ -12,14 +12,15 @@ import java.util.logging.Logger;
 
 import model.BotUser;
 
-public class BotUserJDBCDAO implements BotUserDAO{
+public class BotUserJDBCDAO extends BaseDAO<BotUser>{
 	
 	private Logger logger = Logger.getLogger(BotUserJDBCDAO.class.getName());
 
 	@Override
 	public void insert(BotUser user) {
+		String query = "INSERT INTO botuser(name, email, password) VALUES (?, ?, ?)";
 		try(Connection conn = ConnectionFactory.getConnection(); 
-		    PreparedStatement ps = conn.prepareStatement("INSERT INTO botuser(name, email, password) VALUES (?, ?, ?)")){
+		    PreparedStatement ps = conn.prepareStatement(query)){
 			ps.setString(1, user.getName());
 			ps.setString(2, user.getEmail());
 			ps.setString(3, user.getPassword());
@@ -31,9 +32,10 @@ public class BotUserJDBCDAO implements BotUserDAO{
 
 	@Override
 	public void delete(Integer id) {
+		String query = "DELETE FROM botuser WHERE id=" + id;
 		try(Connection conn = ConnectionFactory.getConnection(); 
 			Statement stmt = conn.createStatement()){
-			stmt.executeUpdate("DELETE FROM botuser WHERE ID=" + id);			
+			stmt.executeUpdate(query);			
 		}catch (SQLException e) {
 			logger.log(Level.SEVERE, null, e);
 		}
@@ -41,8 +43,9 @@ public class BotUserJDBCDAO implements BotUserDAO{
 
 	@Override
 	public void update(BotUser user) {
+		String query = "UPDATE botuser SET name=?, email=?, password=? WHERE id=?";
 		try(Connection conn = ConnectionFactory.getConnection(); 
-			PreparedStatement ps = conn.prepareStatement("UPDATE botuser SET NAME=?, EMAIL=?, PASSWORD=? WHERE ID=?")){
+			PreparedStatement ps = conn.prepareStatement(query)){
 			ps.setString(1, user.getName());
 			ps.setString(2, user.getEmail());
 			ps.setString(3, user.getPassword());
@@ -55,52 +58,53 @@ public class BotUserJDBCDAO implements BotUserDAO{
 
 	@Override
 	public BotUser find(Integer id) {
-		BotUser user = new BotUser();		
+		BotUser user = new BotUser();	
+		String query = "SELECT * FROM botuser WHERE id=" + id;
 		try(Connection conn = ConnectionFactory.getConnection(); 
 			Statement stmt = conn.createStatement(); 
-		    ResultSet rs = stmt.executeQuery("SELECT * FROM botuser WHERE ID=" + id);) {
+		    ResultSet rs = stmt.executeQuery(query)) {
 			if(rs.next()) {
-				user.setId(rs.getInt("ID"));
-				user.setName(rs.getString("NAME"));
-				user.setEmail(rs.getString("EMAIL"));
-				user.setPassword(rs.getString("PASSWORD"));
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email"));
+				user.setPassword(rs.getString("password"));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, null, e);
 		}
 		return user;
 	}
-
-	@Override
+	
 	public BotUser findByEmail(String email) {
-		BotUser user = new BotUser();		
+		BotUser user = new BotUser();	
+		String query = "SELECT * FROM botuser WHERE email='" + email + "'";
 		try(Connection conn = ConnectionFactory.getConnection();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM botuser WHERE EMAIL='" + email + "'")) {			
+			ResultSet rs = stmt.executeQuery(query)) {			
 			if(rs.next()) {
-				user.setId(rs.getInt("ID"));
-				user.setName(rs.getString("NAME"));
-				user.setEmail(rs.getString("EMAIL"));
-				user.setPassword(rs.getString("PASSWORD"));
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email"));
+				user.setPassword(rs.getString("password"));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.SEVERE, null, e);
 		}
 		return user;
 	}
-
-	@Override
+	
 	public List<BotUser> findByName(String name) {
-		List<BotUser> userList = new LinkedList<>();		
+		List<BotUser> userList = new LinkedList<>();
+		String query = "SELECT * FROM botuser WHERE name='" + name + "'";
 		try(Connection conn = ConnectionFactory.getConnection();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM botuser WHERE NAME='" + name + "'")) {			
+			ResultSet rs = stmt.executeQuery(query)) {			
 			while(rs.next()) {
 				BotUser user = new BotUser();
-				user.setId(rs.getInt("ID"));
-				user.setName(rs.getString("NAME"));
-				user.setEmail(rs.getString("EMAIL"));
-				user.setPassword(rs.getString("PASSWORD"));
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email"));
+				user.setPassword(rs.getString("password"));
 				userList.add(user);
 			}
 		} catch (SQLException e) {
@@ -111,16 +115,17 @@ public class BotUserJDBCDAO implements BotUserDAO{
 
 	@Override
 	public List<BotUser> findAll() {
-		List<BotUser> userList = new LinkedList<>();		
+		List<BotUser> userList = new LinkedList<>();	
+		String query = "SELECT * FROM botuser";
 		try(Connection conn = ConnectionFactory.getConnection();
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM botuser") ) {
+			ResultSet rs = stmt.executeQuery(query)) {
 			while(rs.next()) {
 				BotUser user = new BotUser();
-				user.setId(rs.getInt("ID"));
-				user.setName(rs.getString("NAME"));
-				user.setEmail(rs.getString("EMAIL"));
-				user.setPassword(rs.getString("PASSWORD"));
+				user.setId(rs.getInt("id"));
+				user.setName(rs.getString("name"));
+				user.setEmail(rs.getString("email"));
+				user.setPassword(rs.getString("password"));
 				userList.add(user);
 			}
 		} catch (SQLException e) {

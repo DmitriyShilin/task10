@@ -1,5 +1,8 @@
 package tab;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 
@@ -14,6 +17,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import jdbc.AddToCartJDBCDAO;
+import model.AddToCart;
 import model.BotUser;
 import service.EmailValidator;
 
@@ -79,6 +84,7 @@ public class TabAddToCart {
 					catch  (TimeoutException e) {
 						message.setText("Incorrec email/password");
 					}
+					new AddToCartJDBCDAO().insert(new AddToCart(url, email, password, Timestamp.valueOf(LocalDateTime.now())));
 				}
 				else message.setText("Enter url, password and email.");
 			}
