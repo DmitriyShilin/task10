@@ -25,7 +25,7 @@ public class ReportToCSV {
 			CSVWriter writerRU = new CSVWriter(new FileWriter(PATHRU), ';', '"', '\u0000', "\n");
 			Connection conn = ConnectionFactory.getConnection();
 			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);			
-			ResultSet rs = stmt.executeQuery(query);){
+			ResultSet rs = stmt.executeQuery(query)){
 			
 			writer.writeAll(rs, true);			
 			rs.beforeFirst();
